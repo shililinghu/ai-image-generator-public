@@ -1,0 +1,18 @@
+{
+  "name": "ai-poster-generator",
+  "version": "1.0.0",
+  "description": "AI 自动生图 - 客户人脸替换到风格海报",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "https-proxy-agent": "^9.0.0",
+    "multer": "^2.1.1",
+    "openai": "^4.77.0",
+    "playwright": "^1.60.0"
+  }
+}

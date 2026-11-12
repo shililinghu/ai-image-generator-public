@@ -1,0 +1,25 @@
+node_modules/
+.env
+.env.local
+uploads/
+output/
+staging/
+tools/.pinterest-auth.json
+
+# 用户私有：客户档案（含人脸 / 偏好）
+customers/
+
+# 用户私有：参考库本体（保留目录结构，不提交内容）
+元图片/*
+!元图片/.gitkeep
+!元图片/_tags.json.example
+
+# 用户私有：可选的临时辅助文件
+元图片/_newfilelist.txt
+元图片/_filelist.txt
+
+# 日志 / 系统
+*.log
+.DS_Store
+Thumbs.db
+

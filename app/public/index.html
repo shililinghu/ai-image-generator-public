@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 自动生图</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+
+  <!-- compact sticky header (appears on scroll) -->
+  <header class="top-bar" id="topBar">
+    <div class="top-bar-inner">
+      <div class="top-bar-brand">AI 自动生图</div>
+      <div class="top-bar-status" id="topBarStatus"></div>
+    </div>
+  </header>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">CLIENT POSTER · v1</div>
+      <h1>把客户，<em>放进作品里。</em></h1>
+      <p class="subtitle">上传一张人脸 · 选 N 张风格参考 · 让 AI 一次出片。</p>
+    </header>
+
+    <!-- ============ Customer Selector ============ -->
+    <section class="customer-bar" id="customerBar">
+      <div class="customer-pill" id="customerPill">
+        <div class="cp-avatar" id="cpAvatar">+</div>
+        <div class="cp-meta">
+          <div class="cp-label">客户</div>
+          <div class="cp-name" id="cpName">新客户 / 不归档</div>
+        </div>
+        <div class="cp-arrow">▾</div>
+      </div>
+      <div class="customer-dropdown" id="customerDropdown" hidden>
+        <div class="cd-search-wrap">
+          <input type="text" id="cdSearch" placeholder="搜客户…" autocomplete="off">
+        </div>
+        <div class="cd-list" id="cdList"></div>
+        <div class="cd-divider"></div>
+        <div class="cd-new">
+          <input type="text" id="cdNewName" placeholder="新建：中文姓名" maxlength="20">
+          <input type="text" id="cdNewNameEn" placeholder="英文名（可选）" maxlength="30">
+          <button id="cdCreateBtn">+ 新建客户</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 01 Photos ============ -->
+    <section class="block uploader">
+      <div class="block-head">
+        <div class="block-step">01</div>
+        <div class="block-title">客户人像</div>
+        <div class="block-aside">建议正脸 + 侧脸，最多 3 张</div>
+      </div>
+      <label for="photos" class="drop-zone" id="dropZone">
+        <div class="drop-inner">
+          <div class="plus" aria-hidden="true">+</div>
+          <div class="hint">点击或拖拽上传</div>
+          <div class="hint-sub">JPG · PNG · WEBP · 单张 ≤ 20 MB</div>
+        </div>
+        <input type="file" id="photos" accept="image/*" multiple hidden>
+      </label>
+      <div class="previews" id="previews"></div>
+    </section>
+
+    <!-- ============ 02 Names ============ -->
+    <section class="block name-picker">
+      <div class="block-head">
+        <div class="block-step">02</div>
+        <div class="block-title">名字</div>
+        <div class="block-aside">如海报含姓名位置将自动替换</div>
+      </div>
+      <div class="name-row">
+        <div class="name-field">
+          <label for="nameInput">中文</label>
+          <input type="text" id="nameInput" placeholder="如：示例用户" maxlength="20" autocomplete="off">
+        </div>
+        <div class="name-field">
+          <label for="nameEnInput">英文 <span class="optional">可选</span></label>
+          <input type="text" id="nameEnInput" placeholder="如：Example Person" maxlength="30" autocomplete="off">
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 03 Filter (Chips) ============ -->
+    <section class="block filter-picker">
+      <div class="block-head">
+        <div class="block-step">03</div>
+        <div class="block-title">风格</div>
+        <div class="block-aside" id="poolSize">符合 — / — 张</div>
+      </div>
+
+      <div class="chip-group" data-group="gender">
+        <div class="cg-label">性别</div>
+        <div class="cg-chips">
+          <button class="chip active" data-value="">不限</button>
+          <button class="chip" data-value="male">男</button>
+          <button class="chip" data-value="female">女</button>
+        </div>
+      </div>
+
+      <div class="chip-group" data-group="vibe">
+        <div class="cg-label">气质</div>
+        <div class="cg-chips">
+          <button class="chip active" data-value="">不限</button>
+          <button class="chip" data-value="business">商务</button>
+          <button class="chip" data-value="casual">休闲</button>
+          <button class="chip" data-value="artsy">文艺</button>
+          <button class="chip" data-value="cool">酷帅</button>
+          <button class="chip" data-value="retro">复古</button>
+          <button class="chip" data-value="cinematic">电影感</button>
+          <button class="chip" data-value="luxury">奢华</button>
+          <button class="chip" data-value="minimalist">极简</button>
+        </div>
+      </div>
+
+      <div class="chip-group" data-group="tone">
+        <div class="cg-label">色调</div>
+        <div class="cg-chips">
+          <button class="chip active" data-value="">不限</button>
+          <button class="chip" data-value="dark">暗调</button>
+          <button class="chip" data-value="bright">亮调</button>
+          <button class="chip" data-value="warm">暖色</button>
+          <button class="chip" data-value="cool">冷色</button>
+          <button class="chip" data-value="monochrome">黑白</button>
+          <button class="chip" data-value="colorful">多彩</button>
+        </div>
+      </div>
+
+      <div class="chip-group" data-group="age">
+        <div class="cg-label">年龄</div>
+        <div class="cg-chips">
+          <button class="chip active" data-value="">不限</button>
+          <button class="chip" data-value="young">年轻</button>
+          <button class="chip" data-value="middle">中年</button>
+          <button class="chip" data-value="mature">成熟</button>
+        </div>
+      </div>
+
+      <div class="filter-hint" id="filterHint"></div>
+    </section>
+
+    <!-- ============ 04 Count ============ -->
+    <section class="block count-picker">
+      <div class="block-head">
+        <div class="block-step">04</div>
+        <div class="block-title">数量</div>
+        <div class="block-aside count-eta" id="countEta">≈ 2 分钟</div>
+      </div>
+      <div class="count-row">
+        <input type="range" id="countSlider" min="1" max="30" step="1" value="10">
+        <div class="count-value" id="countValue">10</div>
+      </div>
+      <div class="count-marks">
+        <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span>
+      </div>
+    </section>
+
+    <!-- ============ Actions ============ -->
+    <section class="actions">
+      <button id="generateBtn" class="btn-primary" disabled>
+        开始生成 · <span id="btnCount">10</span> 张
+      </button>
+      <button id="cancelBtn" class="btn-ghost" hidden>取消</button>
+      <span class="status" id="status">请先上传客户人像</span>
+    </section>
+
+    <section class="progress-bar-wrap" id="progressWrap" hidden>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">0 / 10</div>
+    </section>
+
+    <section class="results-wrap" id="resultsWrap">
+      <div class="results" id="results"></div>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    Made for poster work · <span class="muted">本地运行 · 照片仅传 OpenAI</span>
+  </footer>
+
+  <!-- ============ Lightbox ============ -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close" id="lbClose" aria-label="关闭">×</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="上一张">‹</button>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="下一张">›</button>
+    <div class="lb-stage">
+      <img id="lbImg" alt="">
+    </div>
+    <div class="lb-meta">
+      <div class="lb-meta-left">
+        <span id="lbIndex">1 / 10</span>
+        <span class="lb-sep">·</span>
+        <span id="lbRef">参考 —</span>
+      </div>
+      <div class="lb-meta-right">
+        <button class="lb-fav" id="lbFav" title="标记为客户最爱">
+          <span class="lb-fav-icon">☆</span>
+          <span class="lb-fav-label">收藏</span>
+        </button>
+        <a class="lb-download" id="lbDownload" download>下载</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Toast ============ -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
